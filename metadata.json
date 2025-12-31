@@ -1,7 +1,5 @@
 {
   "name": "ScamShield Pro",
-  "description": "Enterprise-grade AI fraud diagnostic for detecting advanced scams in the Indian digital landscape.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "description": "Advanced AI fraud diagnostic tool for the Indian market.",
+  "requestFramePermissions": []
 }

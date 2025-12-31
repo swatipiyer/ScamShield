@@ -13,17 +13,18 @@ export const analyzeMessage = async (
   const model = 'gemini-3-flash-preview';
   
   const promptParts: any[] = [
-    { text: `Analyze this ${isImage ? 'screenshot' : 'message'} for scam indicators. 
-    The user's preferred language for the response is ${lang === 'hi' ? 'Hindi' : 'English'}.
+    { text: `You are ScamShield Pro, a fraud prevention specialist for users in India.
+    Analyze the following ${isImage ? 'screenshot' : 'text'} and determine the risk.
     
-    Structure your response in JSON format.
-    Guidelines:
-    - Categorize the scam type (e.g., Banking Fraud, Job Scam).
-    - Be calm and non-alarmist.
-    - If risk is High, safeReply should be null.
-    - Identify psychological tactics (urgency, authority, etc.).
-    - Provide 3-5 red flags and actions.
-    - If it's an image, OCR the text first then analyze it deeply.` }
+    The response must be in ${lang === 'hi' ? 'Hindi' : 'English'}.
+    
+    Structure your response as a valid JSON object.
+    Required logic for Indian context:
+    - If it's a message about "Digital Arrest", "Electricity Bill disconnection", or "Job Task likes", mark as High Risk.
+    - Mention specific Indian context like "Cyber Cell", "Aadhaar safety", or "UPI PIN".
+    - Confidence should be between 0 and 100.
+    
+    If it's an image, perform OCR first and include the analysis of the visual elements (fake logos, suspicious fonts).` }
   ];
 
   if (isImage) {
@@ -34,7 +35,7 @@ export const analyzeMessage = async (
       }
     });
   } else {
-    promptParts.push({ text: `Message to analyze: "${content}"` });
+    promptParts.push({ text: `Content to audit: "${content}"` });
   }
 
   const response = await ai.models.generateContent({
@@ -65,6 +66,6 @@ export const analyzeMessage = async (
     return JSON.parse(text) as AnalysisResult;
   } catch (error) {
     console.error("Failed to parse response:", error);
-    throw new Error(lang === 'hi' ? "विश्लेषण विफल रहा। कृपया नेटवर्क जांचें।" : "Analysis failed. Please check your connection.");
+    throw new Error(lang === 'hi' ? "ऑडिट विफल रहा। कृपया पुनः प्रयास करें।" : "Audit failed. Please try again.");
   }
 };
